@@ -10,7 +10,12 @@ from PIL import Image
 from model import MobileNetRefineDetLiteCBAM
 from utils import AnchorGenerator, decode, xyxy_to_cxcywh
 
+import logging  # ADD THIS
+from datetime import datetime  # ADD THIS
+
 app = Flask(__name__)
+
+logging.basicConfig(level=logging.INFO)
 
 # --- CONFIGURATION ---
 DEVICE = 'cpu'  # Cloud hosting requires CPU
@@ -51,6 +56,9 @@ transform = transforms.Compose([
 
 @app.route('/', methods=['GET'])
 def health_check():
+    timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    app.logger.info(f"🟢 Health check hit at {timestamp}")
+    print(f"🟢 Health check endpoint accessed at {timestamp}", flush=True)
     return "AI Server is Live and Awake!", 200
 
 @app.route('/predict', methods=['POST'])
