@@ -49,6 +49,10 @@ transform = transforms.Compose([
     transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
 ])
 
+@app.route('/', methods=['GET'])
+def health_check():
+    return "AI Server is Live and Awake!", 200
+
 @app.route('/predict', methods=['POST'])
 def predict():
     if 'file' not in request.files:
