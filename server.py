@@ -17,14 +17,14 @@ app = Flask(__name__)
 
 logging.basicConfig(level=logging.INFO)
 
-# --- CONFIGURATION ---
+# Configuration Constants
 DEVICE = 'cpu' 
 MODEL_PATH = 'best_model.pth' 
 IMG_SIZE = 512
 CONF_THRESHOLD = 0.30
 NMS_THRESHOLD = 0.30
 
-# Exact classes 
+# Classes 
 CLASSES = [
     '__background__', 
     'battery_icon', 
@@ -35,15 +35,16 @@ CLASSES = [
 ]
 
 
-print("🚀 Initializing V2 Model & Anchors...")
+print("🚀 Initializing Model & Anchors...")
+# Load the model architecture and weights
 model = MobileNetRefineDetLiteCBAM(num_classes=6).to(DEVICE)
 
 if os.path.exists(MODEL_PATH):
     model.load_state_dict(torch.load(MODEL_PATH, map_location=DEVICE, weights_only=True))
     model.eval()
-    print("✅ V2 Model Loaded Successfully!")
+    print("Model Loaded Successfully!")
 else:
-    print(f"❌ CRITICAL ERROR: {MODEL_PATH} not found.")
+    print(f"CRITICAL ERROR: {MODEL_PATH} not found.")
 
 anchors = AnchorGenerator(IMG_SIZE).forward(DEVICE)
 
@@ -54,13 +55,15 @@ transform = transforms.Compose([
     transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
 ])
 
+# For the UptimeRobot endpoint
 @app.route('/', methods=['GET'])
 def health_check():
     timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-    app.logger.info(f"🟢 Health check hit at {timestamp}")
-    print(f"🟢 Health check endpoint accessed at {timestamp}", flush=True)
+    app.logger.info(f"Health check hit at {timestamp}")
+    print(f"Health check endpoint accessed at {timestamp}", flush=True)
     return "AI Server is Live and Awake!", 200
 
+# Prediction function from the endpoint of the Mobile App
 @app.route('/predict', methods=['POST'])
 def predict():
     if 'file' not in request.files:

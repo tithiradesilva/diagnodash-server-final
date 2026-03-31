@@ -76,7 +76,7 @@ def intersect(box_a, box_b):
     inter = torch.clamp((max_xy - min_xy), min=0)
     return inter[:, :, 0] * inter[:, :, 1]
 
-# Calculates Intersection over Union (IoU) - The standard metric for bounding box accuracy
+# Calculates Intersection over Union (IoU)
 def jaccard(box_a, box_b):
     inter = intersect(box_a, box_b)
     

@@ -11,10 +11,10 @@ ENV PYTHONUNBUFFERED=1
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# 5. Copy all your V2 code files and the model.pth into the container
+# 5. Copy code files and the model.pth into the container
 COPY . .
 
-# 6. Tell the cloud which port we are using
+# 6. Port we are using
 EXPOSE 5000
 
 # 7. Start the server using Gunicorn (Production Grade)

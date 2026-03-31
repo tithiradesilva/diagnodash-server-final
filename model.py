@@ -6,9 +6,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 import torchvision.models as models
 
-# --- ATTENTION MECHANISMS ---
-# Channel Attention: Tells the network "WHAT" is important by pooling feature maps 
-# and compressing them through a multi-layer perceptron (MLP).
+# Channel Attention
 class ChannelAttention(nn.Module):
     def __init__(self, in_planes, ratio=16):
         super().__init__()
@@ -28,8 +26,7 @@ class ChannelAttention(nn.Module):
         max_out = self.fc2(self.relu(self.fc1(self.max_pool(x))))
         return self.sigmoid(avg_out + max_out)
 
-# Spatial Attention: Tells the network "WHERE" the object is by highlighting 
-# critical regions in the feature map using a 7x7 convolution.
+# Spatial Attention
 class SpatialAttention(nn.Module):
     def __init__(self):
         super().__init__()
@@ -77,7 +74,7 @@ class TransferConnectionBlock(nn.Module):
         x = self.cbam(x) 
         return x
 
-# --- MAIN ARCHITECTURE ---
+# Main Model Architecture
 class MobileNetRefineDetLiteCBAM(nn.Module):
     def __init__(self, num_classes):
         super().__init__()
